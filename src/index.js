@@ -32,7 +32,7 @@ app.use("/products",productRoutes);
 
 server.listen(8080, "localhost", () => {
   console.log(`Server is running at local host http://localhost:8080`);
-  console.log("press ctrl+c to close the server");
+  console.log("press ctrl+c in terminal to close the server ");
 });
 
 
