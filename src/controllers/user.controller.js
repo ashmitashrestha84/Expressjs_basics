@@ -27,6 +27,7 @@ export const getbyID=(req,res)=>{
         success:"true",
         data:users,
 });
+};
 export const create=(req, res) => {
 //   res.send("<h1>Users created </h1>");
 // const data=req.body
@@ -78,24 +79,27 @@ export const update= (req, res) => {
 
 
 
-export const remove=(req, res) => {
-    const {id}=req.params;
+export const remove = (req, res) => {
+    const { id } = req.params;
 
-    const index=users.findIndex((user)=> user._id===Number(id));
-    if(index===-1){
+    const index = users.findIndex(
+        (user) => user._id === Number(id)
+    );
+
+    if (index === -1) {
         res.status(404).json({
-            message:"user not found",
-            success:false,
-            data:null,
-        })
+            message: "User not found",
+            success: false,
+            data: null,
+        });
         return;
     }
-    users.splice(index,1)
-//   res.send("<h1>Users delete</h1>");
+
+    users.splice(index, 1);
 
     res.status(200).json({
-        message:"user deleted",
-        success:"true",
-        data:null,
-    })
+        message: "User deleted",
+        success: true,
+        data: null,
+    });
 };

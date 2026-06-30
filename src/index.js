@@ -92,3 +92,20 @@ server.listen(8080, "localhost", () => {
 // /dashboard={}
 // users=> json, html, xml
 // convert the state into json format and transfer
+
+//* middleware
+//? is a function execute between req-res cycle
+//? 1. has access to req obj, res obj and next function
+//? 2. can execute own logic -> multiple function like authentication must be used in different req,res then we use middleware
+//? 3. can modify req & res object
+//? 4. can end req-res cycle
+
+
+//* types of middleware
+//* custom mid
+//? 1. application level middle ware -> all req of application
+//? 2. route level middle ware-> specific req of server
+//? 3. error handler middleware-> error handling in global level
+
+//* thirdparty middleware
+// multer is a thirdparty middleware.
