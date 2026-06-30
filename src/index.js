@@ -29,7 +29,7 @@ app.use((req,res,next)=>{
   req.user={
     name:"John Doe",
   }
-  next();
+  next(1);    //directly jumps to error-middleware jumping third-middleware 
 });
 
 app.use((req,res,next)=>{
@@ -44,6 +44,7 @@ app.use((req,res,next)=>{
   }
   next();
 });
+
 
 
 
@@ -82,6 +83,16 @@ server.listen(8080, "localhost", () => {
 });
 
 
+//not affected by order so always kept at last
+app.use((err,req,res,next)=>{  //4 argument must be passed
+  console.log("error handler");
+  console.log(err);
+  res.status(500).json({
+    message:"something went wrong",
+    success:false,
+    data:null,
+  })
+});
 //req.params -> {}
 
 //http://localhost:8080/users?name=john&page=1&limit=10
@@ -149,7 +160,9 @@ server.listen(8080, "localhost", () => {
 //* custom mid
 //? 1. application level middle ware -> all req of application
 //? 2. route level middle ware-> specific req of server
+
 //? 3. error handler middleware-> error handling in global level
+//? => :(err,req,res,next) =>{}
 
 //req->  middleware1 -> middleware2 -> middlewareN -> controller     //multiple middlewarw can be used
 //is called one after another and after middlewareN routing is called.
