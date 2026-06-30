@@ -32,16 +32,30 @@ app.use((req,res,next)=>{
   next();
 });
 
-
 app.use((req,res,next)=>{
   console.log("middleware 3");
   console.log(req.user);     //same req is used by every middleware
-  res.status(200).json({
-    message:"response from mid3",   //doesnot allow the middleware to pass beyond this 
-                               //function and same response is use till last i.e. controllers
-  });
+  if(req.user){
+    next();
+  }else{
+    res.status(401).json({
+      message:"Unauthorized. Access denied",
+    })
+  }
   next();
 });
+
+
+
+// app.use((req,res,next)=>{
+//   console.log("middleware 3");
+//   console.log(req.user);     //same req is used by every middleware
+//   res.status(200).json({
+//     message:"response from mid3",   //doesnot allow the middleware to pass beyond this 
+//                                //function and same response is use till last i.e. controllers
+//   });
+//   next();
+// });
 
 //* creating http server
 const server = http.createServer(app);
