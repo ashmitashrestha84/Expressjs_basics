@@ -33,10 +33,7 @@ export const getbyID=(req,res)=>{
     res.status(200).json({        
         message:"product",
         success:"true",
-        data:[{
-            _id:id,
-            name:"Apple",
-        }]
+        data:products,
     })
 }
 export const create=(req, res) => {

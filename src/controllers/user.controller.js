@@ -25,13 +25,8 @@ export const getbyID=(req,res)=>{
     res.status(200).json({
         message:"user fetches",
         success:"true",
-        data:[{
-            _id:id,
-            name:"John Doe",
-            email:"john@gmail.com",
-        }]
-    })
-};
+        data:users,
+});
 export const create=(req, res) => {
 //   res.send("<h1>Users created </h1>");
 // const data=req.body

@@ -8,10 +8,10 @@ import http from "http";
 import express from "express";
 import userRoutes from "./routes/user.routes.js";
 import productRoutes from "./routes/products.routes.js";
+import categoryRoutes from "./routes/category.routes.js";
 
 //* creating express app instance
 const app = express();
-
 
 //* creating http server
 const server = http.createServer(app);
@@ -29,6 +29,8 @@ app.get("/", (req, res) => {
 app.use("/users",userRoutes);
 
 app.use("/products",productRoutes);
+
+app.use("/category",categoryRoutes);
 
 server.listen(8080, "localhost", () => {
   console.log(`Server is running at local host http://localhost:8080`);
