@@ -13,6 +13,36 @@ import categoryRoutes from "./routes/category.routes.js";
 //* creating express app instance
 const app = express();
 
+const middleware=(req,res,next)=>{
+  console.log("middleware 1");
+  // console.log(req.user)-> undefined
+  next();    //helps the code to run beyond the app.use(middleware);
+}
+
+//! using middleware
+
+app.use(middleware);
+
+
+app.use((req,res,next)=>{
+  console.log("middleware 2");
+  req.user={
+    name:"John Doe",
+  }
+  next();
+});
+
+
+app.use((req,res,next)=>{
+  console.log("middleware 3");
+  console.log(req.user);     //same req is used by every middleware
+  res.status(200).json({
+    message:"response from mid3",   //doesnot allow the middleware to pass beyond this 
+                               //function and same response is use till last i.e. controllers
+  });
+  next();
+});
+
 //* creating http server
 const server = http.createServer(app);
 app.use(express.json());   //req.body
@@ -106,6 +136,9 @@ server.listen(8080, "localhost", () => {
 //? 1. application level middle ware -> all req of application
 //? 2. route level middle ware-> specific req of server
 //? 3. error handler middleware-> error handling in global level
+
+//req->  middleware1 -> middleware2 -> middlewareN -> controller     //multiple middlewarw can be used
+//is called one after another and after middlewareN routing is called.
 
 //* thirdparty middleware
 // multer is a thirdparty middleware.

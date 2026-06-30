@@ -5,15 +5,12 @@ export const getAll=(req, res) => {
     // const query=req.query;
     // console.log(query);
 //   res.send("<h1>Get all Products</h1>");
-
+    console.log("get all products");
+    console.log(req.user);
 res.status(200).json({        
         message:"product",
         success:"true",
-        data:{
-            _id:1,
-            name:"Apple",
-            products:products
-        }
+        data:products,
     })
 };
 export const getbyID=(req,res)=>{
@@ -33,7 +30,7 @@ export const getbyID=(req,res)=>{
     res.status(200).json({        
         message:"product",
         success:"true",
-        data:products,
+        data:product,
     })
 }
 export const create=(req, res) => {
