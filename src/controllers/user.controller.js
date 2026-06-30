@@ -8,22 +8,26 @@ export const getAll=(req, res) => {
     data:users,
 })
 };
-export const getbyID=(req,res)=>{
+export const getbyID=(req,res,next)=>{
     //req.params=>{}=>{id:1};
     const {id}=req.params;
     const user= users.find((user)=>{
         user.id == Number(id);
     })
     if(!user){
-        res.status(404).json({
-            message:"user not found",
-            success:false,
-            data:null,
-        });
+        // res.status(404).json({
+        //     message:"user not found",
+        //     success:false,
+        //     data:null,
+        // });
+        next({
+            message:"User fetched failed",
+            statusCode:404,
+        })
         return;
     }
     res.status(200).json({
-        message:"user fetches",
+        message:"user fetched",
         success:"true",
         data:users,
 });

@@ -29,7 +29,7 @@ app.use((req,res,next)=>{
   req.user={
     name:"John Doe",
   }
-  next(1);    //directly jumps to error-middleware jumping third-middleware 
+  next();    //directly jumps to error-middleware jumping third-middleware 
 });
 
 app.use((req,res,next)=>{
@@ -85,10 +85,9 @@ server.listen(8080, "localhost", () => {
 
 //not affected by order so always kept at last
 app.use((err,req,res,next)=>{  //4 argument must be passed
-  console.log("error handler");
   console.log(err);
-  res.status(500).json({
-    message:"something went wrong",
+  res.status(err?.statusCode ?? 500).json({
+    message: err?.message ?? "something went wrong",
     success:false,
     data:null,
   })
