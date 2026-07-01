@@ -11,9 +11,7 @@ export const getAll=(req, res) => {
 export const getbyID=(req,res,next)=>{
     //req.params=>{}=>{id:1};
     const {id}=req.params;
-    const user= users.find((user)=>{
-        user.id == Number(id);
-    })
+    const user= users.find((user)=>user.id == Number(id));
     if(!user){
         // res.status(404).json({
         //     message:"user not found",
@@ -59,10 +57,9 @@ export const update= (req, res) => {
 
     const index= users.findIndex((user)=> user._id=== Number(id));
     if(index===-1){
-        res.status(404).json({
+        next({
             message:"user not found",
-            success:"false",
-            data:null,
+            statusCode:404,
         })
         return;
     }
@@ -83,18 +80,15 @@ export const update= (req, res) => {
 
 
 
-export const remove = (req, res) => {
+export const remove = (req, res,next) => {
     const { id } = req.params;
-
     const index = users.findIndex(
         (user) => user._id === Number(id)
     );
-
     if (index === -1) {
-        res.status(404).json({
+        next({
             message: "User not found",
-            success: false,
-            data: null,
+            statusCode:404,
         });
         return;
     }

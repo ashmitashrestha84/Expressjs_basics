@@ -13,17 +13,16 @@ res.status(200).json({
         data:products,
     })
 };
-export const getbyID=(req,res)=>{
+export const getbyID=(req,res,next)=>{
 
     const {id}=req.params;
     const product = products.find((product)=>
         product.id === Number(id)
 )
     if(!product){
-        res.status(404).json({
-            message:"product not found",
-            success: false,
-            data:null,
+        next({
+            message:"Product fetched failed",
+            statusCode:404,
         })
         return;
     }
@@ -35,7 +34,7 @@ export const getbyID=(req,res)=>{
 }
 export const create=(req, res) => {
 //   res.send("<h1>Product created</h1>");
-    // console.log(req.body);
+  // console.log(req.body);
     const {name,price,password}= req.body;
     products.push({
         name,
@@ -50,17 +49,16 @@ export const create=(req, res) => {
         data:products[products.length-1],
     })
 }
-export const update=(req, res) => {
+export const update=(req, res,next) => {
     const {id}= req.params;
 //   res.send("<h1>Product Updated</h1>");
     const { name, price, password }= req.body;
     const index=products.findIndex((product)=>product._id===Number(id));
     
     if(index === -1){
-        res.status(404).json({
+        next({
             message:"product update failed",
-            success:false,
-            data:null,
+        statusCode:404,
         });
         return;
     }
@@ -82,9 +80,9 @@ export const remove=(req, res) => {
 //   res.send("<h1>Product deleted</h1>");
     const index=products.findIndex((product)=>product._id===Number(id));
     if(index === -1){
-        res.status(404).json({
+        next({
             message:"product delete failed",
-            success:false,
+            statusCode:404,
         });
         return;
     } 
