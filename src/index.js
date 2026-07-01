@@ -9,9 +9,16 @@ import express from "express";
 import userRoutes from "./routes/user.routes.js";
 import productRoutes from "./routes/products.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
+import {connectDatabase} from "./config/db.config.js";
 
 //* creating express app instance
 const app = express();
+
+//* creating http server
+const server = http.createServer(app);
+app.use(express.json());   //req.body
+
+connectDatabase();
 
 const middleware=(req,res,next)=>{
   console.log("middleware 1");
@@ -58,9 +65,6 @@ app.use((req,res,next)=>{
 //   next();
 // });
 
-//* creating http server
-const server = http.createServer(app);
-app.use(express.json());   //req.body
 
 //* home -> get ,/ =><h1><Home Page/h1>
 //app.get(path,handler);
@@ -168,3 +172,22 @@ app.use((err,req,res,next)=>{  //4 argument must be passed
 
 //* thirdparty middleware
 // multer is a thirdparty middleware.
+
+
+//* mongodb -> no fixed structure or changeable data structure 
+//NoSql
+
+
+//?sql     -> nosql
+//database ->database
+//table ->collections
+//column ->field
+//row ->document
+
+//mongosh-> CLI -> not necessarily used -> self-learn
+
+//* for practicing raw query use (SQLBolt)
+//* (typrorm) for sql that supports typescript
+//* (sequelizeorm) for sql that supports typescript
+//* (prismaorm) for sql that doesnot support typescript
+

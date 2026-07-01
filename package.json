@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "express": "^5.2.1",
-    "module": "^2.0.0"
+    "module": "^2.0.0",
+    "mongoose": "^9.7.3"
   }
 }
