@@ -1,17 +1,55 @@
+import mongoose from "mongoose";
 
 const users=[];
-export const getAll=(req, res) => {
+
+//! user schema
+const userSchema=new mongoose.Schema({
+    name:{
+        type:String,
+        required:true,
+        minLength:3,
+    },
+    email:{
+        type:String,
+        requires:true,
+        unique: true,
+    },
+    password:{
+        type:String,
+        requires:true,
+    },
+},{timestamps:true});
+
+//! creating user model
+const User=mongoose.model('user',userSchema);   //sync operation
+
+
+
+export const getAll=async(req, res,next) => {
 //   res.send("<h1>Get all Users</h1>");
+
+    try{
+    const query=req.query;
+    console.log(query);
+
+    //* database find all query
+    const users=await User.find({}); 
     res.status(200).json({
     message:"user created",
     success:true,
     data:users,
-})
+});
+}
+    catch(err){
+        next(err);
+    }
 };
-export const getbyID=(req,res,next)=>{
+export const getbyID=async(req,res,next)=>{
     //req.params=>{}=>{id:1};
-    const {id}=req.params;
-    const user= users.find((user)=>user.id == Number(id));
+    try{ 
+        const {id}=req.params;
+    const user= await find.One({_id:id});
+    // const user= users.find((user)=>user.id == Number(id));
     if(!user){
         // res.status(404).json({
         //     message:"user not found",
@@ -29,75 +67,86 @@ export const getbyID=(req,res,next)=>{
         success:"true",
         data:users,
 });
-};
-export const create=(req, res) => {
+}
+catch(err){
+    next(err);
+}
+}
+export const create= async(req, res, next) => {
 //   res.send("<h1>Users created </h1>");
 // const data=req.body
 // users.push({
 //     ...data,
 // })
-
-const {name,email,password}= req.body;
-users.push({
+try{
+const user=await User.create({
     name,
     email,
     password,
-    createdAt: Date.now(),
-    _id: users.length+1,
 });
 res.status(201).json({
     message:"user created",
     success:true,
-    data: users[users.length -1],
+    data: user,
 })
-};
-export const update= (req, res) => {
-    const {id}=req.params;
-    const {name,email,password}=req.body
-
-    const index= users.findIndex((user)=> user._id=== Number(id));
-    if(index===-1){
-        next({
-            message:"user not found",
-            statusCode:404,
-        })
-        return;
-    }
-
-    users[index]={
-        ...users[index],
+}
+catch(err){
+    next(err);
+}
+}
+export const update = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const {name,email,password}=req.body;
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
         name,
         email,
         password,
-    }
-//   res.send("<h1>Users Updated</h1>");
-    res.status(201).json({
-        message:"user updated",
-        success:true,
-        data:users[index],
-    })
-}
-
-
-
-export const remove = (req, res,next) => {
-    const { id } = req.params;
-    const index = users.findIndex(
-        (user) => user._id === Number(id)
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
     );
-    if (index === -1) {
+
+    if (!user) {
+    next({
+        message: "User not found",
+        statusCode: 404,
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "User updated successfully",
+      success: true,
+      data:user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const remove =async(req, res,next) => {
+    try{
+    const {id} = req.params;
+    const user=await User.findByIdAndDelete(id);
+    if (!user) {
         next({
             message: "User not found",
             statusCode:404,
         });
         return;
     }
-
-    users.splice(index, 1);
-
     res.status(200).json({
         message: "User deleted",
         success: true,
-        data: null,
+        data: user,
     });
-};
+}
+catch(err){
+    next(err);
+}
+}
