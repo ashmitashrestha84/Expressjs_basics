@@ -1,10 +1,31 @@
-
+import mongoose from "mongoose";
 const products=[];
 
-export const getAll=(req, res) => {
+const productSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      minLength: 3,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+const Product = mongoose.model("product", productSchema);
+export const getAll=async(req, res,next) => {
     // const query=req.query;
     // console.log(query);
 //   res.send("<h1>Get all Products</h1>");
+try{
     console.log("get all products");
     console.log(req.user);
 res.status(200).json({        
@@ -12,13 +33,15 @@ res.status(200).json({
         success:"true",
         data:products,
     })
-};
-export const getbyID=(req,res,next)=>{
-
+}
+catch(err){
+    next(err);
+}
+}
+export const getbyID=async(req,res,next)=>{
+    try{
     const {id}=req.params;
-    const product = products.find((product)=>
-        product.id === Number(id)
-)
+    const product = await findOne({_id:id})
     if(!product){
         next({
             message:"Product fetched failed",
@@ -32,64 +55,83 @@ export const getbyID=(req,res,next)=>{
         data:product,
     })
 }
-export const create=(req, res) => {
+catch(err){
+    next(err);
+}}
+export const create=async(req, res, next) => {
 //   res.send("<h1>Product created</h1>");
   // console.log(req.body);
-    const {name,price,password}= req.body;
-    products.push({
+ try{
+  const {name,price,password}= req.body;
+    const product=({
         name,
         price,
         password,
-        createdAt:new Date(Date.now()),
-        _id: products.length+1,
     })
     res.status(201).json({
         message:"product created",
         success:"true",
-        data:products[products.length-1],
+        data:product,
     })
+}catch(err){
+    next(err);
 }
-export const update=(req, res,next) => {
+};
+export const update=async(req, res,next) => {
+    try{
     const {id}= req.params;
 //   res.send("<h1>Product Updated</h1>");
     const { name, price, password }= req.body;
-    const index=products.findIndex((product)=>product._id===Number(id));
+    const product=await Product.findByIdAndUpdate(
+        id,
+        {
+        name,
+        price,
+        password,
+        },
+        {
+        new: true,
+        runValidators: true,
+      }
+    );
     
-    if(index === -1){
+    if(!product){
         next({
             message:"product update failed",
         statusCode:404,
         });
         return;
     }
-    products[index]={
-        ...products[index],
-        name,
-        price,
-        password,
-    }
-    res.status(201).json({
+    res.status(200).json({
         message:"product updated",
         success:"true",
-        data:products[index],
+        data:product,
     });
-};
+}
+catch(err){
+    next(err);
+}
+}
 
-export const remove=(req, res) => {
+export const remove=async(req, res) => {
+    try{
     const {id}=req.params;
 //   res.send("<h1>Product deleted</h1>");
-    const index=products.findIndex((product)=>product._id===Number(id));
-    if(index === -1){
+    const product=await Product.findByIdAndDelete(id);
+    if(!product){
         next({
             message:"product delete failed",
             statusCode:404,
         });
         return;
     } 
-    products.splice(index,1);
     res.status(200).json({
         message:"product deleted",
-        success:"true",
-        data:null,
+        success:true,
+        data:product,
     })
-};
+}
+catch(err){
+    next(err);
+}
+}
